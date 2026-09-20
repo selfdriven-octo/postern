@@ -1,10 +1,8 @@
-# Secure Node Direct
+# postern 0.0.1
 
 **Node.js only: no WireGuard, npm packages, certificate files, external OpenSSL executable, or separate server software.**
 
 The stack is **IP → TCP → TLS 1.3 → small structured messages**. Each client/server pair shares a different random 256-bit authentication key (PSK). Node's built-in TLS implementation performs the handshake and encryption. There is no custom encryption or certificate generator.
-
-This is a separate alternative to the earlier certificate-and-WireGuard version. Its configuration files are not interchangeable.
 
 ## Quick start
 
