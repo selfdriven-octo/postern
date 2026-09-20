@@ -1,0 +1,64 @@
+name: Deploy Jekyll site from /docs
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      # Build theme-only Jekyll site from /docs
+      - name: Build with GitHub Pages Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./docs
+          destination: ./_site
+
+      # Ensure we can modify _site (fix container ownership)
+      - name: Fix permissions
+        run: sudo chown -R $USER:$USER ./_site
+
+      # Create .well-known and copy artifacts
+      - name: Publish agent endpoints
+        run: |
+          mkdir -p ./_site/.well-known
+          if [ -d "./docs/_well-known" ]; then
+            cp -r ./docs/_well-known/* ./_site/.well-known/
+          fi
+
+      # Zip skills folders and copy to .well-known
+      - name: Package skills
+        run: |
+          if [ -d "./skills" ]; then
+            cd skills
+            zip -r ../_site/.well-known/skills.zip ./*
+            cd ..
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/deploy-pages@v4
