@@ -1,9 +1,9 @@
-title: "octonomous"
-description: "An Open Framework for Self-Sovereign Intelligent Beings"
+title: "postern"
+description: "Amall door in a thick wall"
 baseurl: ""
 url: ""
-context: "nexus"
-repo: "selfdriven-octo/octonomous"
+context: "postern"
+repo: "selfdriven-octo/postern"
 
 defaults:
   - scope:
