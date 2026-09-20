@@ -80,6 +80,14 @@ permalink: "/"
   .mark .tile{width:10px; height:10px; background:var(--brass); box-shadow:0 0 14px var(--halo)}
   .bar-right{display:flex; align-items:center; gap:.9rem; flex-wrap:wrap}
   .listening{font-family:"JetBrains Mono",monospace; font-size:.74rem; color:var(--muted); display:flex; align-items:center; gap:.5rem}
+  .gh{font-family:"JetBrains Mono",monospace; font-size:.74rem; letter-spacing:.04em; color:var(--brass); text-decoration:none; border:1px solid var(--line); padding:.3rem .65rem; transition:border-color .25s, box-shadow .25s}
+  /* narrow screens: wordmark + github on row one, status line below */
+  @media (max-width:600px){
+    .bar-right{display:contents}
+    .gh{order:1}
+    .listening{order:2; flex-basis:100%}
+  }
+  .gh:hover{color:var(--brass); border-color:var(--brass); box-shadow:0 0 18px -6px var(--halo)}
   .pulse{width:6px; height:6px; border-radius:50%; background:var(--brass); box-shadow:0 0 0 0 var(--halo); animation:beat 3.4s ease-out infinite}
   @keyframes beat{0%{box-shadow:0 0 0 0 var(--halo)}60%{box-shadow:0 0 0 10px rgba(0,0,0,0)}100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}}
 
@@ -279,6 +287,7 @@ permalink: "/"
   <div class="mark"><span class="tile"></span>POSTERN</div>
   <div class="bar-right">
     <span class="listening"><span class="pulse"></span>udp/51820 · listening · answering nobody</span>
+    <a class="gh" href="https://github.com/selfdriven-octo/postern" target="_blank" rel="noopener">github ↗</a>
   </div>
 </nav>
 
@@ -540,7 +549,7 @@ permalink: "/"
   <div class="wrap">
     <div class="foot-top">
       <div class="mark" style="letter-spacing:.16em"><span class="tile"></span>POSTERN</div>
-      <div class="mono" style="font-size:.82rem">postern.network</div>
+      <div class="mono" style="font-size:.82rem">postern.network<br><a href="https://github.com/selfdriven-octo/postern" target="_blank" rel="noopener" style="white-space:nowrap">github.com/selfdriven-octo/postern</a></div>
       <div>A quiet transport for known participants.</div>
     </div>
 
