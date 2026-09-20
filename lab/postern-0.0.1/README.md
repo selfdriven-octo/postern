@@ -1,4 +1,6 @@
-# postern 0.0.1
+# postern-0.0.1
+
+https://postern.network
 
 **Node.js only: no WireGuard, npm packages, certificate files, external OpenSSL executable, or separate server software.**
 
