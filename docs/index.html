@@ -246,6 +246,17 @@ permalink: "/"
   .dump-key span{display:flex; align-items:center; gap:.45rem}
   .sw{width:9px; height:9px; flex:0 0 auto}
 
+  /* ======================= mesh + keri ======================= */
+  .mesh-fig{display:block; width:100%; max-width:420px; margin:0 auto; padding:clamp(10px,2vw,22px)}
+  .mesh-fig .mesh-lbl text{font-family:"JetBrains Mono",monospace; font-size:13px; letter-spacing:.02em}
+  .mesh-fig .mesh-void{font-family:"JetBrains Mono",monospace; font-size:11px; fill:var(--dim); letter-spacing:.14em}
+  .fp{display:inline-flex; gap:.7rem; align-items:baseline; flex-wrap:wrap; margin:.2rem 0 .1rem; padding:.55rem .85rem; border:1px solid var(--brass); background:var(--brass-dim); font-family:"JetBrains Mono",monospace; font-size:.8rem; color:var(--muted)}
+  .fp b{color:var(--brass); font-weight:700; font-size:1.02rem; letter-spacing:.08em; text-shadow:0 0 14px var(--halo)}
+  .kel .ev{color:var(--brass)} .kel .sn{color:var(--ok)} .kel .dev{color:var(--ctr)} .kel .rv{color:var(--ink)}
+  .kel pre{font-size:clamp(.66rem,.56rem + .3vw,.82rem)}
+  .next-note{margin-top:1.6rem; padding:.9rem 1.1rem; border:1px dashed var(--line); color:var(--muted); max-width:62ch; font-size:1.22rem; line-height:1.48}
+  .next-note b{color:var(--brass)}
+
   /* ======================= limits ======================= */
   .limits{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(18px,2.6vw,34px); margin-top:2.2rem}
   .limit{padding-top:1rem; border-top:2px solid var(--brass)}
@@ -527,6 +538,80 @@ permalink: "/"
       <p>Services, devices, and agents you control, speaking only to each other. In an agentic setting, Postern decides <b>who</b> is speaking; a separate control decides <b>whether the requested action is allowed</b>. The two stay distinct on purpose.</p>
       <p>Terminate the channel at the actual receiving application, not a shared gateway. A tunnel that ends at a gateway protects only as far as the gateway — keep the door at the room you are actually guarding.</p>
     </div>
+  </section>
+
+  <!-- ============ two shapes: client-server and mesh ============ -->
+  <section id="mesh">
+    <p class="eyebrow">two shapes</p>
+    <h2>One door for a service. One door each for a team.</h2>
+    <div class="paths">
+      <div class="path shut">
+        <div class="head"><h3>Client–server</h3><span class="verdict">one responder</span></div>
+        <p>One node binds the port and answers; enrolled devices call it. The right shape when one side is genuinely a service — a vault, a sensor gateway, an agent host.</p>
+      </div>
+      <div class="path open">
+        <div class="head"><h3>Peer mesh</h3><span class="verdict">every node answers</span></div>
+        <p>Every node answers and calls on the same socket. No hub, no directory, no broker — each node decides for itself who it will speak to and what they may ask. The right shape for a team that trusts each other directly.</p>
+      </div>
+    </div>
+
+    <div class="door">
+      <div class="term">
+        <div class="term-top">
+          <span><span class="dot"></span>team mesh · 8 people</span>
+          <span>28 links</span>
+        </div>
+        <svg class="mesh-fig" viewBox="0 0 400 400" role="img" aria-labelledby="meshTitle meshDesc">
+          <title id="meshTitle">An eight-person Postern mesh</title>
+          <desc id="meshDesc">Eight devices arranged in a circle, every one joined directly to every other: 28 links and no node in the middle. One device, ana, is highlighted with its seven links.</desc>
+          <g stroke="var(--line)" stroke-width="1" opacity=".9"><line x1="290.5" y1="109.5" x2="328.0" y2="200.0"/><line x1="290.5" y1="109.5" x2="290.5" y2="290.5"/><line x1="290.5" y1="109.5" x2="200.0" y2="328.0"/><line x1="290.5" y1="109.5" x2="109.5" y2="290.5"/><line x1="290.5" y1="109.5" x2="72.0" y2="200.0"/><line x1="290.5" y1="109.5" x2="109.5" y2="109.5"/><line x1="328.0" y1="200.0" x2="290.5" y2="290.5"/><line x1="328.0" y1="200.0" x2="200.0" y2="328.0"/><line x1="328.0" y1="200.0" x2="109.5" y2="290.5"/><line x1="328.0" y1="200.0" x2="72.0" y2="200.0"/><line x1="328.0" y1="200.0" x2="109.5" y2="109.5"/><line x1="290.5" y1="290.5" x2="200.0" y2="328.0"/><line x1="290.5" y1="290.5" x2="109.5" y2="290.5"/><line x1="290.5" y1="290.5" x2="72.0" y2="200.0"/><line x1="290.5" y1="290.5" x2="109.5" y2="109.5"/><line x1="200.0" y1="328.0" x2="109.5" y2="290.5"/><line x1="200.0" y1="328.0" x2="72.0" y2="200.0"/><line x1="200.0" y1="328.0" x2="109.5" y2="109.5"/><line x1="109.5" y1="290.5" x2="72.0" y2="200.0"/><line x1="109.5" y1="290.5" x2="109.5" y2="109.5"/><line x1="72.0" y1="200.0" x2="109.5" y2="109.5"/></g>
+          <g stroke="var(--brass)" stroke-width="1.4" opacity=".75"><line x1="200.0" y1="72.0" x2="290.5" y2="109.5"/><line x1="200.0" y1="72.0" x2="328.0" y2="200.0"/><line x1="200.0" y1="72.0" x2="290.5" y2="290.5"/><line x1="200.0" y1="72.0" x2="200.0" y2="328.0"/><line x1="200.0" y1="72.0" x2="109.5" y2="290.5"/><line x1="200.0" y1="72.0" x2="72.0" y2="200.0"/><line x1="200.0" y1="72.0" x2="109.5" y2="109.5"/></g>
+          <text x="200" y="204" text-anchor="middle" class="mesh-void">no hub</text>
+          <g><rect x="193.0" y="65.0" width="14" height="14" fill="var(--brass)" stroke="var(--brass)" stroke-width="1.5"/><rect x="283.5" y="102.5" width="14" height="14" fill="var(--bg3)" stroke="var(--brass)" stroke-width="1.5"/><rect x="321.0" y="193.0" width="14" height="14" fill="var(--bg3)" stroke="var(--brass)" stroke-width="1.5"/><rect x="283.5" y="283.5" width="14" height="14" fill="var(--bg3)" stroke="var(--brass)" stroke-width="1.5"/><rect x="193.0" y="321.0" width="14" height="14" fill="var(--bg3)" stroke="var(--brass)" stroke-width="1.5"/><rect x="102.5" y="283.5" width="14" height="14" fill="var(--bg3)" stroke="var(--brass)" stroke-width="1.5"/><rect x="65.0" y="193.0" width="14" height="14" fill="var(--bg3)" stroke="var(--brass)" stroke-width="1.5"/><rect x="102.5" y="102.5" width="14" height="14" fill="var(--bg3)" stroke="var(--brass)" stroke-width="1.5"/></g>
+          <g class="mesh-lbl"><text x="200.0" y="46.0" text-anchor="middle" fill="var(--ink)">ana</text><text x="311.7" y="92.3" text-anchor="middle" fill="var(--muted)">ben</text><text x="358.0" y="204.0" text-anchor="middle" fill="var(--muted)">cho</text><text x="311.7" y="315.7" text-anchor="middle" fill="var(--muted)">dev</text><text x="200.0" y="362.0" text-anchor="middle" fill="var(--muted)">eli</text><text x="88.3" y="315.7" text-anchor="middle" fill="var(--muted)">fay</text><text x="42.0" y="204.0" text-anchor="middle" fill="var(--muted)">gus</text><text x="88.3" y="92.3" text-anchor="middle" fill="var(--muted)">hal</text></g>
+        </svg>
+      </div>
+      <div class="prose">
+        <p>Eight people is <b>28 links</b>, and each node holds <b>7 entries</b> — a roster you can read on one screen. A peer is a device, not a person, so a lost laptop is revoked without touching that person's phone.</p>
+        <p>Everyone holds the same roster. To confirm it, the team gets on a call and reads one number aloud:</p>
+        <p class="fp">roster v3 <b>BP9B-M5T4-PDDG</b></p>
+        <p>Keys, grants and revocations are in that number; addresses are not, so people can roam without re-verifying. If two peers dial each other at the same instant, both sides discard the same session without conferring — they keep the one started by the higher key.</p>
+        <p>The cost of having no authority: a revocation takes effect on each node <b>when that node updates</b>. A colleague holding yesterday's roster still trusts yesterday's key. Postern makes that disagreement visible — peers can ask each other for their fingerprint — rather than pretending it away.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ next: keri ============ -->
+  <section id="keri">
+    <p class="eyebrow">next · keri</p>
+    <h2>Revocation every node can check for itself.</h2>
+    <div class="prose">
+      <p>The mesh has one real weakness: trust arrives by courier. Someone sends the roster, and everyone believes it. <b>KERI</b> replaces the courier with evidence.</p>
+      <p>Each person holds an autonomic identifier — an <b>AID</b> — whose key history is an append-only, witnessed key event log. The device keys Postern handshakes with are anchored to that log. Enrolling a laptop is an event; revoking it is an event. Any node can verify either from the log itself, without trusting whoever forwarded it.</p>
+      <p>Pre-rotation makes loss survivable. Every event commits to the digest of the <b>next</b> key before that key is ever used, so a stolen current key cannot rotate the identity away from its owner.</p>
+    </div>
+
+    <div class="dump kel">
+      <div class="dump-top"><span>key event log · ana · illustrative</span><span>AID EBfx…q7Rw</span></div>
+      <div class="dump-body">
+<pre><span class="sn">sn 0</span>  <span class="ev">icp</span>  inception      <span class="b-ct">signing k0 · commits next H(k1) · witnesses 2 of 3</span>
+<span class="sn">sn 1</span>  <span class="ev">ixn</span>  anchor         <span class="dev">device x25519 e7:1c:9a:04…</span>  <span class="b-ct">ana-laptop · ping,status</span>
+<span class="sn">sn 2</span>  <span class="ev">ixn</span>  anchor         <span class="dev">device x25519 3f:a0:12:8b…</span>  <span class="b-ct">ana-phone  · ping</span>
+<span class="sn">sn 3</span>  <span class="ev">ixn</span>  <span class="rv">revoke</span>         <span class="dev">device x25519 e7:1c:9a:04…</span>  <span class="b-ct">laptop reported lost</span>
+<span class="sn">sn 4</span>  <span class="ev">rot</span>  rotation       <span class="b-ct">k1 becomes current · commits next H(k2)</span></pre>
+      </div>
+      <div class="dump-key">
+        <span><i class="sw" style="background:var(--ok)"></i>sequence</span>
+        <span><i class="sw" style="background:var(--brass)"></i>event type</span>
+        <span><i class="sw" style="background:var(--ctr)"></i>anchored device key</span>
+        <span><i class="sw" style="background:var(--dim)"></i>detail</span>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:1.4rem">
+      <p>Verification happens away from the door. Nodes fetch and check logs in the background, never in the handshake path, so what a stranger can reach before authentication stays exactly as small as it is now.</p>
+    </div>
+    <p class="next-note"><b>Not in the current release.</b> This is a design direction. It adds dependencies — a KERI library and witnesses — that Postern deliberately does not have today, and that trade is worth making on purpose rather than by default.</p>
   </section>
 
   <!-- ============ limits ============ -->
