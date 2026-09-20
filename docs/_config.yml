@@ -1,0 +1,20 @@
+title: "octonomous"
+description: "An Open Framework for Self-Sovereign Intelligent Beings"
+baseurl: ""
+url: ""
+context: "nexus"
+repo: "selfdriven-octo/octonomous"
+
+defaults:
+  - scope:
+      path: "pages"
+      type: "pages"
+    values:
+      layout: selfdriven
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+exclude:
+  - _well-known/

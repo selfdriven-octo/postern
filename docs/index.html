@@ -1,0 +1,650 @@
+---
+layout: null
+permalink: "/"
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Postern — a small door in a thick wall</title>
+<meta name="description" content="Postern is a mutually authenticated, encrypted channel between explicitly enrolled devices. One UDP port. Enrolled keys only. Everyone else gets silence.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ======================= tokens ======================= */
+  /* P1 green phosphor — one hue, hierarchy carried by brightness,
+     exactly how a monochrome monitor did it */
+  :root{
+    --bg:#020a04; --bg2:#04120a; --bg3:#07180d;
+    --stone:#0a1c10; --stone-2:#071509; --stone-hi:#0f2617;
+    --line:#1c4028; --line-2:#122a1a;
+    --ink:#c8ffc8; --muted:#63c46f; --dim:#3d7d48;
+    --brass:#33ff33; --brass-2:#22cc2b; --brass-dim:rgba(51,255,51,.13);
+    --slit:#d6ffd6; --halo:rgba(51,255,51,.50);
+    --ok:#aaffaa; --drop:#2f6b3a; --ctr:#7fe08f;
+    /* the doorway itself, so the aperture glows green rather than warm */
+    --ap-1:#0d3318; --ap-2:#08220f; --ap-3:#031206;
+    --grain:.035; --scan:rgba(51,255,51,.038);
+    --bloom:rgba(51,255,51,.22);
+    --focus:#33ff33;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth; background:var(--bg)}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); isolation:isolate;
+    font-family:"VT323","Courier New",monospace; font-size:clamp(1.34rem,1.24rem + .45vw,1.52rem);
+    line-height:1.5; letter-spacing:.012em; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  /* grain + scanline, fixed over everything */
+  body::after{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:60;
+    background-image:url("data:image/png;base64,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");
+    background-size:96px 96px; opacity:var(--grain);
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:59;
+    background:repeating-linear-gradient(to bottom, var(--scan) 0 1px, transparent 1px 3px);
+  }
+  .wrap{max-width:1140px; margin:0 auto; padding:0 clamp(20px,5vw,56px); position:relative; z-index:2}
+  a{color:inherit; text-underline-offset:3px; text-decoration-color:var(--brass)}
+  a:hover{color:var(--brass)}
+  ::selection{background:var(--brass); color:#020a04}
+  :focus-visible{outline:2px solid var(--focus); outline-offset:3px}
+
+  h1,h2,h3,.mark{font-family:"JetBrains Mono",ui-monospace,monospace; font-weight:800; letter-spacing:-.045em; line-height:1.08}
+  /* phosphor bloom: a CRT pixel bleeds into its neighbours */
+  h1,
+  h2,
+  .mark,
+  .eyebrow,
+  .mono{ text-shadow:0 0 12px var(--bloom) }
+  .log .row,
+  .dump pre{ text-shadow:0 0 9px var(--bloom) }
+  h3{font-weight:700; letter-spacing:-.025em}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+
+  /* ======================= nav ======================= */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    padding:1rem clamp(20px,5vw,56px); flex-wrap:wrap;
+    transition:background .35s ease, border-color .35s ease, backdrop-filter .35s ease;
+    border-bottom:1px solid transparent;
+  }
+  nav.stuck{background:color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom-color:var(--line-2)}
+  .mark{font-weight:800; font-size:.92rem; letter-spacing:.2em; display:flex; align-items:center; gap:.6rem}
+  .mark .tile{width:10px; height:10px; background:var(--brass); box-shadow:0 0 14px var(--halo)}
+  .bar-right{display:flex; align-items:center; gap:.9rem; flex-wrap:wrap}
+  .listening{font-family:"JetBrains Mono",monospace; font-size:.74rem; color:var(--muted); display:flex; align-items:center; gap:.5rem}
+  .pulse{width:6px; height:6px; border-radius:50%; background:var(--brass); box-shadow:0 0 0 0 var(--halo); animation:beat 3.4s ease-out infinite}
+  @keyframes beat{0%{box-shadow:0 0 0 0 var(--halo)}60%{box-shadow:0 0 0 10px rgba(0,0,0,0)}100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}}
+
+  /* ======================= cinematic stage ======================= */
+  .stage{position:relative; min-height:100svh; display:flex; align-items:flex-end; overflow:hidden; isolation:isolate}
+  .scene{position:absolute; inset:0; width:100%; height:100%; z-index:0}
+  .scene svg{width:100%; height:100%; display:block}
+  .vignette{
+    position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:radial-gradient(120% 90% at 62% 46%, transparent 25%, var(--bg) 96%);
+  }
+  .stage-inner{position:relative; z-index:3; width:100%; padding:0 0 clamp(46px,7vh,92px)}
+
+  .kicker{
+    font-family:"JetBrains Mono",monospace; font-size:.76rem; letter-spacing:.2em;
+    color:var(--brass); margin:0 0 1.4rem; display:flex; align-items:center; gap:.75rem;
+  }
+  .kicker::before{content:""; width:clamp(28px,5vw,64px); height:1px; background:var(--brass); box-shadow:0 0 12px var(--halo)}
+  h1{
+    font-size:clamp(2rem,.85rem + 5.2vw,5.1rem); margin:0 0 1.1rem; max-width:17ch;
+    text-shadow:0 0 26px var(--bloom), 0 2px 40px rgba(0,0,0,.6);
+  }
+  h1 .l2{display:block; color:var(--brass); text-shadow:0 0 60px var(--halo), 0 2px 40px rgba(0,0,0,.6)}
+  /* terminal cursor — the page is a prompt */
+  h1 .cur{
+    display:inline-block; width:.52em; height:.86em; margin-left:.1em; vertical-align:-.06em;
+    background:var(--brass); box-shadow:0 0 22px var(--halo); animation:blink 1.15s steps(1) infinite;
+  }
+  @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+  .lede{font-size:clamp(1.5rem,1.32rem + .75vw,1.92rem); line-height:1.4; max-width:38ch; margin:0 0 1.8rem; color:var(--ink)}
+  .hero-meta{display:flex; flex-wrap:wrap; gap:.6rem .5rem; font-family:"JetBrains Mono",monospace; font-size:.74rem}
+  .chip{
+    border:1px solid var(--line); padding:.4rem .7rem; color:var(--muted);
+    background:color-mix(in srgb, var(--bg2) 70%, transparent); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  }
+  .chip b{color:var(--brass); font-weight:500}
+  .scrollcue{
+    position:absolute; bottom:1.1rem; right:clamp(20px,5vw,56px); z-index:4;
+    font-family:"JetBrains Mono",monospace; font-size:.68rem; letter-spacing:.16em; color:var(--dim);
+    writing-mode:vertical-rl; display:flex; align-items:center; gap:.7rem;
+  }
+  .scrollcue::after{content:""; width:1px; height:46px; background:linear-gradient(to bottom,var(--brass),transparent); animation:cue 2.6s ease-in-out infinite}
+  @keyframes cue{0%,100%{opacity:.25; transform:scaleY(.5); transform-origin:top}50%{opacity:1; transform:scaleY(1)}}
+
+  /* ======================= ticker ======================= */
+  .ticker{
+    position:relative; z-index:3; border-top:1px solid var(--line-2); border-bottom:1px solid var(--line-2);
+    background:var(--bg2); overflow:hidden; padding:.55rem 0;
+  }
+  .ticker-track{display:flex; gap:2.6rem; white-space:nowrap; width:max-content; animation:slide 44s linear infinite}
+  .ticker:hover .ticker-track{animation-play-state:paused}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .tick{font-family:"JetBrains Mono",monospace; font-size:.73rem; color:var(--drop); display:flex; align-items:center; gap:.6rem}
+  .tick i{width:5px; height:5px; background:var(--drop); font-style:normal; flex:0 0 auto}
+  .tick.ok{color:var(--ok)} .tick.ok i{background:var(--ok); box-shadow:0 0 10px var(--ok)}
+
+  /* ======================= sections ======================= */
+  section{padding:clamp(56px,8vw,116px) 0; position:relative}
+  section + section{border-top:1px solid var(--line-2)}
+  .eyebrow{font-family:"JetBrains Mono",monospace; font-weight:500; font-size:.73rem; letter-spacing:.1em; color:var(--brass); margin:0 0 1.1rem; display:flex; align-items:center; gap:.55rem}
+  .eyebrow::before{content:"//"; opacity:.6; font-weight:700}
+  h2{font-size:clamp(1.35rem,1.05rem + 1.35vw,2.15rem); max-width:26ch; margin:0 0 1.2rem}
+  .prose{max-width:62ch; color:var(--muted)}
+  /* single-weight face: emphasis is brightness, not weight */
+  b,strong{font-weight:400; color:var(--ink)}
+  b, strong{text-shadow:0 0 10px var(--bloom)}
+  .prose b{color:var(--ink); font-weight:500}
+
+  /* reveal — used sparingly, on two moments only */
+  .rise{opacity:0; transform:translateY(22px); transition:opacity .85s cubic-bezier(.2,.7,.2,1), transform .85s cubic-bezier(.2,.7,.2,1)}
+  .rise.seen{opacity:1; transform:none}
+
+  /* ======================= statement ======================= */
+  .statement{
+    position:relative; padding:clamp(56px,9vw,130px) 0;
+    background:
+      radial-gradient(90% 140% at 50% 0%, var(--brass-dim), transparent 62%),
+      var(--bg2);
+    border-top:1px solid var(--line-2); border-bottom:1px solid var(--line-2);
+  }
+  .statement q{
+    display:block; quotes:none; font-family:"JetBrains Mono",monospace; font-weight:800;
+    font-size:clamp(1.35rem,.95rem + 2.3vw,2.65rem); line-height:1.12; letter-spacing:-.045em;
+    max-width:22ch; margin:0 0 1.3rem;
+  }
+  .statement q em{font-style:normal; color:var(--brass); text-shadow:0 0 44px var(--halo)}
+  .statement .prose{max-width:58ch}
+
+  /* ======================= door / terminal ======================= */
+  .door{display:grid; grid-template-columns:1.05fr .95fr; gap:clamp(22px,3.4vw,50px); align-items:start; margin-top:2.4rem}
+  .term{
+    background:linear-gradient(180deg, var(--bg3), var(--bg2));
+    border:1px solid var(--line); overflow:hidden;
+    box-shadow:0 30px 70px -40px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.015) inset;
+  }
+  .term-top{display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.72rem 1rem; border-bottom:1px solid var(--line); font-family:"JetBrains Mono",monospace; font-size:.72rem; color:var(--muted); letter-spacing:.05em}
+  .term-top .dot{width:7px;height:7px;border-radius:50%;background:var(--brass);display:inline-block;margin-right:.55rem;vertical-align:middle;box-shadow:0 0 12px var(--halo)}
+  .log{margin:0; padding:1rem 1.1rem; height:308px; overflow:hidden; font-family:"JetBrains Mono",monospace; font-size:.765rem; line-height:2; display:flex; flex-direction:column; justify-content:flex-end}
+  .log .row{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--drop); animation:fadein .45s ease both}
+  @keyframes fadein{from{opacity:0; transform:translateY(5px)}to{opacity:1; transform:none}}
+  .log .row.in{color:var(--ok)}
+  .log .row.you{color:var(--brass)}
+  .log .row .t{opacity:.5}
+  .term-foot{display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.72rem 1rem; border-top:1px solid var(--line); font-family:"JetBrains Mono",monospace; font-size:.72rem; color:var(--muted); flex-wrap:wrap}
+  .knock{background:none; border:1px solid var(--brass); color:var(--brass); font-family:"JetBrains Mono",monospace; font-size:.72rem; letter-spacing:.08em; padding:.42rem .9rem; cursor:pointer; transition:box-shadow .25s, background .25s}
+  .knock:hover{background:var(--brass-dim); box-shadow:0 0 26px -8px var(--halo)}
+  .knock[disabled]{opacity:.4; cursor:default; box-shadow:none; background:none}
+  .tally b{color:var(--ink); font-weight:600}
+
+  /* ======================= paths ======================= */
+  .paths{display:grid; grid-template-columns:1fr 1fr; gap:clamp(18px,2.6vw,32px); margin-top:2.3rem}
+  .path{
+    position:relative; border:1px solid var(--line); background:var(--bg2);
+    padding:clamp(22px,2.8vw,34px); overflow:hidden; transition:border-color .35s, transform .35s, box-shadow .35s;
+  }
+  .path::before{content:""; position:absolute; inset:0 0 auto 0; height:2px; background:var(--line); transition:background .35s, box-shadow .35s}
+  .path:hover{transform:translateY(-3px)}
+  .path.shut:hover{border-color:var(--dim)}
+  .path.shut:hover::before{background:var(--dim)}
+  .path.open::before{background:var(--brass); box-shadow:0 0 22px var(--halo)}
+  .path.open{border-color:color-mix(in srgb, var(--brass) 45%, var(--line))}
+  .path.open:hover{box-shadow:0 26px 60px -44px var(--halo)}
+  .path .head{display:flex; align-items:center; gap:.75rem; margin-bottom:.8rem; flex-wrap:wrap}
+  .path h3{font-size:1.02rem}
+  .verdict{font-family:"JetBrains Mono",monospace; font-size:.71rem; padding:.2rem .55rem; border:1px solid var(--line); color:var(--muted); letter-spacing:.05em}
+  .path.open .verdict{color:var(--brass); border-color:var(--brass)}
+  .path p{margin:.2rem 0 0; color:var(--muted); font-size:1.3rem; line-height:1.48}
+
+  /* ======================= properties ======================= */
+  .props{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; margin-top:2.3rem; background:var(--line-2); border:1px solid var(--line-2)}
+  .prop{background:var(--bg); padding:clamp(20px,2.5vw,30px); transition:background .35s}
+  .prop:hover{background:var(--bg2)}
+  .prop .ico{width:26px; height:26px; margin-bottom:1rem; color:var(--brass)}
+  .prop:hover .ico{filter:drop-shadow(0 0 10px var(--halo))}
+  .prop h3{font-size:.93rem; margin:0 0 .5rem}
+  .prop p{margin:0; color:var(--muted); font-size:1.26rem; line-height:1.46}
+
+  /* ======================= hex dump ======================= */
+  .dump{
+    margin-top:2.3rem; border:1px solid var(--line); background:var(--bg2);
+    box-shadow:0 30px 70px -46px rgba(0,0,0,.9); overflow:hidden;
+  }
+  .dump-top{padding:.72rem 1rem; border-bottom:1px solid var(--line); font-family:"JetBrains Mono",monospace; font-size:.72rem; color:var(--muted); letter-spacing:.05em; display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap}
+  .dump-body{padding:clamp(18px,2.4vw,26px); overflow-x:auto}
+  .dump pre{margin:0; font-family:"JetBrains Mono",monospace; font-size:clamp(.72rem,.62rem + .3vw,.86rem); line-height:2.05; white-space:pre}
+  .b-type{color:var(--brass); background:var(--brass-dim); padding:.1rem .18rem}
+  .b-idx{color:var(--ok)}
+  .b-ctr{color:var(--ctr)}
+  .b-ct{color:var(--dim)}
+  .dump-key{display:flex; flex-wrap:wrap; gap:.4rem 1.4rem; padding:0 clamp(18px,2.4vw,26px) clamp(18px,2.4vw,26px); font-family:"JetBrains Mono",monospace; font-size:.72rem; color:var(--muted)}
+  .dump-key span{display:flex; align-items:center; gap:.45rem}
+  .sw{width:9px; height:9px; flex:0 0 auto}
+
+  /* ======================= limits ======================= */
+  .limits{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(18px,2.6vw,34px); margin-top:2.2rem}
+  .limit{padding-top:1rem; border-top:2px solid var(--brass)}
+  .limit h3{font-size:.95rem; margin:0 0 .5rem}
+  .limit p{margin:0; color:var(--muted); font-size:1.28rem; line-height:1.48}
+
+  /* ======================= close ======================= */
+  .close{text-align:left}
+  .close .big{font-size:clamp(1.6rem,1.15rem + 2.3vw,3.1rem); margin:0 0 1.2rem; max-width:20ch}
+  .honest{margin-top:2.4rem; padding-top:1.4rem; border-top:1px solid var(--line-2); border-left:2px solid var(--brass); padding-left:1.1rem; color:var(--muted); max-width:62ch; font-size:1.24rem; line-height:1.5}
+
+  /* ======================= footer ======================= */
+  footer{border-top:1px solid var(--line-2); padding:2.4rem 0 1.6rem; background:var(--bg2)}
+  .foot-top{display:flex; flex-wrap:wrap; gap:1rem 2rem; align-items:center; justify-content:space-between; color:var(--muted); font-size:1.18rem}
+  .supported{margin-top:2rem; padding-top:1.7rem; border-top:1px solid var(--line-2)}
+  .sd-text{font-family:"Poppins",system-ui,sans-serif; font-size:1.01rem; color:var(--muted); line-height:1.4}
+  .sd-text a{font-weight:500; color:var(--brass); text-decoration:underline; text-decoration-color:var(--brass-2); text-underline-offset:3px}
+  .sd-text a:hover{color:var(--ink); text-decoration-color:var(--ink)}
+  .foot-end{margin-top:1.7rem; font-family:"JetBrains Mono",monospace; font-size:.71rem; color:var(--dim); letter-spacing:.06em}
+
+  /* ======================= responsive ======================= */
+  @media (max-width:900px){
+    .door,.paths,.limits{grid-template-columns:1fr}
+    .props{grid-template-columns:1fr}
+    h1{max-width:none}
+    .scrollcue{display:none}
+    .stage{min-height:92svh}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .ticker-track{animation:none}
+    .pulse,.scrollcue::after,h1 .cur{animation:none}
+    h1 .cur{opacity:1}
+    .rise{opacity:1; transform:none; transition:none}
+    .log .row{animation:none}
+    body::before{display:none}
+    .beam-flicker{animation:none !important}
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="mark"><span class="tile"></span>POSTERN</div>
+  <div class="bar-right">
+    <span class="listening"><span class="pulse"></span>udp/51820 · listening · answering nobody</span>
+  </div>
+</nav>
+
+<!-- ============ cinematic stage ============ -->
+<div class="stage">
+  <div class="scene" aria-hidden="true">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--stone-2)"/>
+          <stop offset="1" stop-color="var(--bg)"/>
+        </linearGradient>
+        <linearGradient id="aperture" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--ap-3)"/>
+          <stop offset=".45" stop-color="var(--ap-2)"/>
+          <stop offset=".86" stop-color="var(--ap-1)"/>
+          <stop offset="1" stop-color="var(--slit)" stop-opacity=".55"/>
+        </linearGradient>
+        <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--halo)" stop-opacity=".95"/>
+          <stop offset=".55" stop-color="var(--halo)" stop-opacity=".30"/>
+          <stop offset="1" stop-color="var(--halo)" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="bloom" cx=".5" cy=".5" r=".5">
+          <stop offset="0" stop-color="var(--halo)" stop-opacity=".85"/>
+          <stop offset="1" stop-color="var(--halo)" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="blur18" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="18"/></filter>
+        <filter id="blur6" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="6"/></filter>
+      </defs>
+
+      <!-- floor -->
+      <rect x="0" y="628" width="1600" height="272" fill="url(#floor)"/>
+
+      <!-- light spilling across the floor from the open doorway -->
+      <g id="beamGroup" class="beam-flicker">
+        <polygon points="958,636 1042,636 1330,900 670,900" fill="url(#beam)" filter="url(#blur18)" opacity=".8"/>
+        <polygon points="968,636 1032,636 1170,900 830,900" fill="url(#beam)" filter="url(#blur6)" opacity=".6"/>
+        <ellipse cx="1000" cy="640" rx="150" ry="22" fill="url(#bloom)" opacity=".5"/>
+      </g>
+
+      <!-- the open doorway: the light source itself -->
+      <g class="beam-flicker">
+        <path d="M958,640 L958,214 A42,42 0 0 1 1042,214 L1042,640 Z" fill="url(#aperture)"/>
+        <ellipse cx="1000" cy="646" rx="60" ry="80" fill="url(#bloom)" opacity=".5"/>
+      </g>
+
+      <!-- masonry: left mass -->
+      <rect x="-40" y="60" width="998" height="580" fill="var(--stone)"/>
+      <!-- masonry: right mass -->
+      <rect x="1042" y="60" width="598" height="580" fill="var(--stone)"/>
+      <!-- masonry over the arch: the block between the two masses, less the
+           arch opening, so the spandrels either side of the curve are stone -->
+      <path d="M958,60 H1042 V214 A42,42 0 0 0 958,214 Z" fill="var(--stone)"/>
+      <!-- lintel -->
+      <rect x="-40" y="-20" width="1680" height="86" fill="var(--stone-hi)"/>
+      <!-- threshold -->
+      <rect x="900" y="640" width="200" height="22" fill="var(--stone-hi)"/>
+
+      <!-- mortar -->
+      <g stroke="var(--line)" stroke-width="2" fill="none" opacity=".65">
+        <path d="M-40,150 H958 M958,150 H1042 M1042,150 H1640"/>
+        <path d="M-40,240 H958 M1042,240 H1640"/>
+        <path d="M-40,330 H958 M1042,330 H1640"/>
+        <path d="M-40,420 H958 M1042,420 H1640"/>
+        <path d="M-40,510 H958 M1042,510 H1640"/>
+        <path d="M-40,600 H958 M1042,600 H1640"/>
+        <path d="M120,66 V150 M420,66 V150 M720,66 V150 M1000,66 V150 M1180,66 V150 M1480,66 V150"/>
+        <path d="M60,150 V240 M300,150 V240 M560,150 V240 M820,150 V240 M1120,150 V240 M1380,150 V240"/>
+        <path d="M120,240 V330 M420,240 V330 M720,240 V330 M1180,240 V330 M1480,240 V330"/>
+        <path d="M60,330 V420 M300,330 V420 M560,330 V420 M820,330 V420 M1120,330 V420 M1380,330 V420"/>
+        <path d="M120,420 V510 M420,420 V510 M720,420 V510 M1180,420 V510 M1480,420 V510"/>
+        <path d="M60,510 V600 M300,510 V600 M560,510 V600 M820,510 V600 M1120,510 V600 M1380,510 V600"/>
+      </g>
+
+      <!-- brass lamp on the right jamb -->
+      <g class="beam-flicker">
+        <ellipse cx="1108" cy="332" rx="120" ry="120" fill="url(#bloom)" opacity=".38"/>
+        <rect x="1050" y="318" width="12" height="30" fill="var(--brass-2)"/>
+        <path d="M1062,325 h22 v16 h-22 z" fill="var(--brass)"/>
+        <circle cx="1092" cy="333" r="8" fill="var(--slit)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="vignette"></div>
+
+  <div class="stage-inner">
+    <div class="wrap">
+      <p class="kicker">postern.network</p>
+      <h1>The small door<span class="l2">in a thick wall.<span class="cur"></span></span></h1>
+      <p class="lede">A mutually authenticated, encrypted channel between devices you have explicitly enrolled. Everyone else gets silence.</p>
+      <div class="hero-meta">
+        <span class="chip">responder <b>e7:1c:9a:04:bb:73:2f:d8</b></span>
+        <span class="chip">peers <b>4</b></span>
+        <span class="chip">ops granted <b>3</b></span>
+        <span class="chip">public registration <b>none</b></span>
+      </div>
+    </div>
+  </div>
+  <div class="scrollcue">scroll</div>
+</div>
+
+<!-- ============ ticker ============ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="track"></div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ live door ============ -->
+  <section>
+    <p class="eyebrow">at the door · live</p>
+    <h2>Most of what arrives is never answered.</h2>
+    <div class="door">
+      <div class="term">
+        <div class="term-top">
+          <span><span class="dot"></span>postern · gate log</span>
+          <span id="clock">--:--:--</span>
+        </div>
+        <div class="log mono" id="log" aria-live="polite" aria-label="Live log of packets arriving at the door"></div>
+        <div class="term-foot">
+          <span class="tally">ignored this session <b id="tally">0</b></span>
+          <button class="knock" id="knock">try the door →</button>
+        </div>
+      </div>
+      <div class="prose">
+        <p>Scanners find the port. They always do. What they get back is nothing at all — no banner, no error, no version string, not even a refusal to interpret. There is no reply to grep.</p>
+        <p>An enrolled key gets a different evening entirely: a handshake, fresh session keys, an open channel. Same port, same packet shape. The only difference is whether you were <b>let in beforehand</b>.</p>
+        <p class="mono" style="font-size:.78rem">↑ press the button. you are not enrolled.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ statement ============ -->
+<div class="statement">
+  <div class="wrap">
+    <div class="rise" data-rise>
+      <q>Resistance is a <em>smaller door</em>, not a longer wall.</q>
+      <div class="prose">
+        <p>Most defences add layers. Postern removes them. It shrinks what an attacker can reach <b>before</b> authentication to a single handshake, and what an authenticated peer can do <b>after</b> it to a named list of operations. Fewer parsers to probe, no login flow to walk, no application behaviour to enumerate.</p>
+        <p>This is an architectural judgement about attack surface — against a tireless automated attacker, the useful defence is to leave almost nothing to explore. It is not a promise that no exploit can ever exist.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ paths ============ -->
+  <section>
+    <p class="eyebrow">two ways to arrive</p>
+    <h2>Only one of them is a conversation.</h2>
+    <div class="paths">
+      <div class="path shut">
+        <div class="head"><h3>An unknown packet</h3><span class="verdict">no reply</span></div>
+        <p>A source you never allowlisted, or a key you never enrolled. Postern drops it unread. The handshake path is rate-limited per source, so a flood cannot force the machine to do real work on a stranger's behalf.</p>
+      </div>
+      <div class="path open">
+        <div class="head"><h3>An enrolled peer</h3><span class="verdict">channel open</span></div>
+        <p>A key you placed in the registry yourself, out of band. A Noise handshake proves both ends hold their enrolled keys and derives fresh session keys — authenticated, replay-protected and forward-secret — before a single application byte is read.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ properties ============ -->
+  <section>
+    <p class="eyebrow">what the channel guarantees</p>
+    <h2>Six properties, and no more surface than they need.</h2>
+    <div class="props">
+      <div class="prop">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg>
+        <h3>Mutual authentication</h3>
+        <p>Built on the Noise IK pattern — the handshake family behind WireGuard. Both ends prove possession of an enrolled key before anything else happens.</p>
+      </div>
+      <div class="prop">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v5"/><path d="M9 17h6"/></svg>
+        <h3>Forward secrecy</h3>
+        <p>Ephemeral keys per session. A static key stolen tomorrow does not decrypt what was said today.</p>
+      </div>
+      <div class="prop">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+        <h3>Replay protection</h3>
+        <p>A sliding window rejects captured packets resent later, in any order.</p>
+      </div>
+      <div class="prop">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/></svg>
+        <h3>Silence to probes</h3>
+        <p>Unrecognised traffic is discarded without a response. Nothing to fingerprint, nothing to answer.</p>
+      </div>
+      <div class="prop">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/></svg>
+        <h3>Authority per peer</h3>
+        <p>A key is granted named operations and nothing more. Passing the gate is not the run of the house.</p>
+      </div>
+      <div class="prop">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/></svg>
+        <h3>Revocation</h3>
+        <p>Remove a key from the registry and its next packet is refused. Any live session falls in behind it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ hex dump ============ -->
+  <section>
+    <p class="eyebrow">on the wire</p>
+    <h2>Three message types. No ceremony.</h2>
+    <div class="dump rise" data-rise>
+      <div class="dump-top"><span>transport packet · 0x03</span><span>61 bytes on the wire</span></div>
+      <div class="dump-body">
+<pre><span class="b-ct">0000</span>  <span class="b-type">03</span> <span class="b-idx">a4 1f 7c 02</span> <span class="b-ctr">00 00 00 00 00 00 11 9e</span>  <span class="b-ct">2c 8f 41 d3</span>
+<span class="b-ct">0010</span>  <span class="b-ct">7b e0 55 1a 93 c4 6d 20 af 38 b1 0c e9 72 45 dd</span>
+<span class="b-ct">0020</span>  <span class="b-ct">36 8a c7 15 f0 4b 92 61 ae 03 d8 57 2b 9f 64 e1</span>
+<span class="b-ct">0030</span>  <span class="b-ct">10 7d a6 33 c2 58 8e 04 b7 2f 6c 91 d5</span></pre>
+      </div>
+      <div class="dump-key">
+        <span><i class="sw" style="background:var(--brass)"></i>type</span>
+        <span><i class="sw" style="background:var(--ok)"></i>receiver index</span>
+        <span><i class="sw" style="background:var(--ctr)"></i>counter (replay-checked)</span>
+        <span><i class="sw" style="background:var(--dim)"></i>ciphertext + tag</span>
+      </div>
+    </div>
+    <p class="prose" style="margin-top:1.3rem">No DNS, no HTTP, no browsers, no certificate authority. With fixed addresses and provisioned keys, the channel needs none of them. The operating system still routes packets; everything above that is only what the traffic requires.</p>
+  </section>
+
+  <!-- ============ carries ============ -->
+  <section>
+    <p class="eyebrow">what it carries</p>
+    <h2>A private line between participants that already know one another.</h2>
+    <div class="prose">
+      <p>Services, devices, and agents you control, speaking only to each other. In an agentic setting, Postern decides <b>who</b> is speaking; a separate control decides <b>whether the requested action is allowed</b>. The two stay distinct on purpose.</p>
+      <p>Terminate the channel at the actual receiving application, not a shared gateway. A tunnel that ends at a gateway protects only as far as the gateway — keep the door at the room you are actually guarding.</p>
+    </div>
+  </section>
+
+  <!-- ============ limits ============ -->
+  <section>
+    <p class="eyebrow">what a small door does not do</p>
+    <h2>Stated plainly, because integrity is the point.</h2>
+    <div class="limits">
+      <div class="limit"><h3>A stolen key</h3><p>A compromised enrolled device crosses the boundary like any legitimate one. Protect keys at rest, revoke quickly, keep each peer's authority small.</p></div>
+      <div class="limit"><h3>Your link</h3><p>Encryption cannot stop someone flooding the pipe itself. That needs upstream protection and, where it matters, independent connectivity.</p></div>
+      <div class="limit"><h3>The message</h3><p>An authenticated packet can still ask for something harmful. Whether to act on it is a decision that lives above the channel, not inside it.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ close ============ -->
+  <section class="close">
+    <p class="eyebrow">getting in</p>
+    <h2 class="big">There is no sign-up.</h2>
+    <div class="prose">
+      <p>Postern has no public registration by design — and neither does this page. Enrolment happens out of band, through a channel you already trust. Two parties exchange public keys directly and add each other to the registry. That exchange is the whole ceremony.</p>
+    </div>
+    <p class="honest">A strong minimal design — not a proven “most resistant” protocol. Resistance depends on how much code an attacker can reach, how keys are protected, and what an authenticated peer is allowed to do. The judgement here is architectural, and it is stated rather than sold.</p>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="mark" style="letter-spacing:.16em"><span class="tile"></span>POSTERN</div>
+      <div class="mono" style="font-size:.82rem">postern.network</div>
+      <div>A quiet transport for known participants.</div>
+    </div>
+
+    <div class="supported">
+      <span class="sd-text">Supported by the <a href="https://selfdriven.foundation" target="_blank" rel="noopener">selfdriven.foundation</a></span>
+    </div>
+
+    <div class="foot-end">no trackers · no analytics · no cookies · nothing to leak</div>
+  </div>
+</footer>
+
+<script>
+
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* sticky nav */
+  var nav=document.getElementById('nav');
+  function onScroll(){ nav.classList.toggle('stuck', window.scrollY>40) }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+  /* reveal, used on two elements only */
+  var rises=document.querySelectorAll('[data-rise]');
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('seen'); io.unobserve(e.target) } });
+    },{threshold:.18});
+    rises.forEach(function(el){ io.observe(el) });
+  } else { rises.forEach(function(el){ el.classList.add('seen') }) }
+
+  /* lamp responds to pointer — subtle parallax on the light only */
+  var beams=document.querySelectorAll('.beam-flicker');
+  if(!reduce && window.matchMedia('(pointer:fine)').matches){
+    window.addEventListener('mousemove', function(ev){
+      var dx=(ev.clientX/window.innerWidth-.5);
+      var dy=(ev.clientY/window.innerHeight-.5);
+      beams.forEach(function(b){
+        b.style.transform='translate('+(dx*-14).toFixed(2)+'px,'+(dy*-8).toFixed(2)+'px)';
+      });
+    }, {passive:true});
+  }
+  /* slow lamp flicker */
+  if(!reduce){
+    var t=0;
+    setInterval(function(){
+      t+=1;
+      var f = 0.94 + Math.sin(t*0.6)*0.03 + (Math.random()*0.03);
+      beams.forEach(function(b){ b.style.opacity = Math.min(1,f).toFixed(3) });
+    }, 300);
+  }
+
+  /* clock */
+  var clock=document.getElementById('clock');
+  function tick(){ clock.textContent=new Date().toTimeString().slice(0,8) }
+  tick(); setInterval(tick,1000);
+
+  /* shared generators */
+  function hex(n){ var s='',h='0123456789abcdef'; for(var i=0;i<n;i++) s+=h[Math.floor(Math.random()*16)]; return s }
+  function ip(){
+    var a=[45,77,103,185,193,31,91,146,209,62];
+    return a[Math.floor(Math.random()*a.length)]+'.'+Math.floor(Math.random()*256)+'.'+Math.floor(Math.random()*256)+'.'+(1+Math.floor(Math.random()*253));
+  }
+  var DROPS=['unknown key — no reply','no handshake — no reply','malformed init — dropped','oversize datagram — dropped unread','rate limit — dropped','replayed counter — dropped','not enrolled — no reply'];
+  var PEERS=[{n:'sensor-04',op:'status'},{n:'relay-01',op:'ping'},{n:'agent-sd',op:'status'},{n:'vault-02',op:'ping'}];
+
+  /* ticker */
+  var track=document.getElementById('track');
+  function tickerItem(){
+    var d=document.createElement('span');
+    if(Math.random()<0.14){
+      var p=PEERS[Math.floor(Math.random()*PEERS.length)];
+      d.className='tick ok'; d.innerHTML='<i></i>enrolled '+p.n+' · channel open';
+    } else {
+      d.className='tick'; d.innerHTML='<i></i>'+ip()+' · key '+hex(4)+'… · '+DROPS[Math.floor(Math.random()*DROPS.length)];
+    }
+    return d;
+  }
+  /* build one set, then duplicate it so the -50% loop is seamless */
+  var items=[]; for(var i=0;i<18;i++) items.push(tickerItem());
+  items.forEach(function(el){ track.appendChild(el) });
+  items.forEach(function(el){ track.appendChild(el.cloneNode(true)) });
+
+  /* gate log */
+  var log=document.getElementById('log'), tally=document.getElementById('tally'), knock=document.getElementById('knock');
+  var n=0, MAX=11;
+  function stamp(){ return new Date().toTimeString().slice(0,8) }
+  function push(cls,text){
+    var d=document.createElement('div'); d.className='row '+cls;
+    d.innerHTML='<span class="t">'+stamp()+'</span>  '+text;
+    log.appendChild(d);
+    while(log.children.length>MAX) log.removeChild(log.firstChild);
+  }
+  function drop(){ push('', ip()+'  key '+hex(4)+'…  '+DROPS[Math.floor(Math.random()*DROPS.length)]); n++; tally.textContent=n.toLocaleString() }
+  function admit(){ var p=PEERS[Math.floor(Math.random()*PEERS.length)]; push('in','enrolled '+p.n+'  handshake ok  channel open  op:'+p.op) }
+  for(var k=0;k<7;k++){ Math.random()<0.18 ? admit() : drop() }
+  if(!reduce){ (function loop(){ setTimeout(function(){ Math.random()<0.16?admit():drop(); loop() }, 700+Math.random()*1800) })() }
+
+  knock.addEventListener('click', function(){
+    knock.disabled=true; knock.textContent='knocking…';
+    push('you','you  '+ip()+'  key '+hex(4)+'…  init sent →');
+    setTimeout(function(){ push('','        …waiting for a reply'); n++; tally.textContent=n.toLocaleString() },900);
+    setTimeout(function(){ push('','        no reply. the door does not say why.'); knock.disabled=false; knock.textContent='try again →' },2600);
+  });
+})();
+</script>
+</body>
+</html>

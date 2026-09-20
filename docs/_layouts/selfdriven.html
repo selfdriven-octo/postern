@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="/assets/img/selfdriven-logo-round-blackcurrant-flamingo.png">
+	<link rel="apple-touch-icon" href="/assets/img/selfdriven-logo-round-blackcurrant-flamingo.png" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  
+  <title>{% if page.title %}{{ page.title }} — {% endif %}{{ site.title | default: "selfdriven Foundation" }}</title>
+  <meta name="description" content="{{ page.description | default: site.description | default: 'selfdriven Foundation framework documentation.' }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/selfdriven.css" />
+</head>
+<body>
+
+<!-- ─── Nav ──────────────────────────────────────────────────── -->
+<nav id="nav">
+  <a href="{{ site.baseurl }}/" class="nav-logo">
+    <img src="{{ site.baseurl }}/assets/img/selfdriven-logo-{{ site.context }}-flamingo-transparent.png"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
+         alt="selfdriven" />
+    <span style="display:none;font-size:16px;font-weight:700;letter-spacing:-0.03em;color:var(--text)">selfdriven</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="https://selfdriven.foundation" target="_blank">Foundation</a></li>
+    <li><a href="https://selfdriven.community" target="_blank">Community</a></li>
+  </ul>
+</nav>
+
+<!-- ─── Page ──────────────────────────────────────────────────── -->
+<div class="prose-page">
+
+  {% if page.parent_title %}
+  <p class="prose-eyebrow">
+    {% if page.parent_url %}<a href="{{ page.parent_url | prepend: site.baseurl }}">{{ page.parent_title }}</a>{% else %}{{ page.parent_title }}{% endif %}
+    &nbsp;/&nbsp; {{ page.section | default: "Framework" }}
+  </p>
+  {% endif %}
+
+  <div class="prose-container">
+
+    <!-- ─── TOC sidebar ─────────────────────────────────────────── -->
+    <aside class="prose-toc" aria-label="Table of contents" id="toc">
+      <p class="prose-toc-label">Contents</p>
+      <ol id="toc-list">
+        <!-- Populated by JS from h2/h3 headings -->
+      </ol>
+    </aside>
+
+    <!-- ─── Article body ────────────────────────────────────────── -->
+    <article class="prose-body" id="prose-body">
+      {{ content }}
+    </article>
+
+  </div><!-- .prose-container -->
+
+</div><!-- .prose-page -->
+
+<!-- ─── Prev / Next nav ───────────────────────────────────────── -->
+{% if page.prev_url or page.next_url %}
+<nav class="prose-footer-nav" aria-label="Document navigation">
+  {% if page.prev_url %}
+  <a href="{{ page.prev_url | prepend: site.baseurl }}">← {{ page.prev_title | default: "Previous" }}</a>
+  {% else %}<span></span>{% endif %}
+  {% if page.next_url %}
+  <a href="{{ page.next_url | prepend: site.baseurl }}">{{ page.next_title | default: "Next" }} →</a>
+  {% endif %}
+</nav>
+{% endif %}
+
+<!-- ─── Footer ───────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-logo">
+	<a href="https://selfdriven.foundation">
+    	<img src="{{ site.baseurl }}/assets/img/selfdriven-logo-words-blackcurrant-transparent.png"
+         	alt="selfdriven" />
+	</a>
+  </div>
+  <ul class="footer-links">
+    <li><a href="https://actuate.selfdriven.community" target="_blank">actuate</a></li>
+    <li><a href="https://github.com/{{ site.repo }}" target="_blank">github</a></li>
+  </ul>
+</footer>
+
+<script>
+// ─── Scroll nav ──────────────────────────────────────────────
+const navEl = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  navEl.classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// ─── Auto-build TOC from h2 / h3 in article ─────────────────
+(function buildTOC() {
+  const body    = document.getElementById('prose-body');
+  const tocList = document.getElementById('toc-list');
+  if (!body || !tocList) return;
+
+  const headings = body.querySelectorAll('h2, h3');
+  if (!headings.length) return;
+
+  headings.forEach((h, i) => {
+    // Ensure each heading has an id
+    if (!h.id) {
+      h.id = 'heading-' + i + '-' +
+        h.textContent.trim().toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+    }
+
+    const li = document.createElement('li');
+    if (h.tagName === 'H3') li.classList.add('toc-sub');
+
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    // Strip leading "X.X " numbering for cleaner TOC labels
+    a.textContent = h.textContent.replace(/^\d+(\.\d+)*\s+[—–-]?\s*/, '').trim();
+    li.appendChild(a);
+    tocList.appendChild(li);
+  });
+
+  // ─── Active TOC link on scroll ──────────────────────────────
+  const tocLinks = tocList.querySelectorAll('a');
+  const headingEls = Array.from(headings);
+
+  function updateActive() {
+    const scrollY = window.scrollY + 120;
+    let activeIdx = 0;
+    headingEls.forEach((h, i) => {
+      if (h.offsetTop <= scrollY) activeIdx = i;
+    });
+    tocLinks.forEach((a, i) => a.classList.toggle('active', i === activeIdx));
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+
+  // Smooth scroll to heading on TOC click
+  tocLinks.forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
