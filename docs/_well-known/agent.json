@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0",
+  "name": "Postern",
+  "description": "A mutually authenticated, encrypted channel between explicitly enrolled devices. One UDP port, a Noise_IK handshake only enrolled keys can complete, and a narrow set of named operations behind it. Everyone else gets silence.",
+  "kind": "transport",
+  "url": "https://postern.network",
+  "repository": "https://github.com/selfdriven-octo/postern",
+  "documentationUrl": "https://github.com/selfdriven-octo/postern#readme",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "selfdriven Foundation",
+    "url": "https://selfdriven.foundation"
+  },
+
+  "enrolment": {
+    "publicRegistration": false,
+    "method": "out-of-band",
+    "description": "Two parties exchange X25519 public keys directly, through a channel they already trust, and add each other to their registries. There is no sign-up endpoint, no password login and no certificate authority.",
+    "grantModel": "per-peer named operations; tunnel membership is not general access"
+  },
+
+  "identity": {
+    "keyType": "X25519",
+    "responderStaticKey": "<responder-x25519-public-key>",
+    "responderStaticKeyDistribution": "out-of-band, to enrolled peers only"
+  },
+
+  "transport": {
+    "network": "ip",
+    "protocol": "udp",
+    "defaultPort": 51820,
+    "handshake": "Noise_IK_25519_ChaChaPoly_BLAKE2b",
+    "handshakeLibrary": "noise-handshake",
+    "handshakeNote": "Same IK pattern family as WireGuard (which uses Noise_IKpsk2_25519_ChaChaPoly_BLAKE2s); not WireGuard-compatible on the wire.",
+    "prologue": "mnc/1",
+    "aead": "ChaCha20-Poly1305",
+    "messages": [
+      { "type": "0x01", "name": "init", "layout": "[type][initIdx:4][noise msg1]", "direction": "initiator → responder" },
+      { "type": "0x02", "name": "resp", "layout": "[type][initIdx:4][respIdx:4][noise msg2]", "direction": "responder → initiator", "sentOnlyTo": "enrolled keys" },
+      { "type": "0x03", "name": "transport", "layout": "[type][receiverIdx:4][counter:8 BE][ciphertext + tag]", "direction": "both" }
+    ],
+    "antiReplay": { "mechanism": "sliding window, checked after AEAD verification", "windowSize": 2048 },
+    "rekey": { "maxMessagesPerSession": 4294967294, "sessionIdleSeconds": 180 }
+  },
+
+  "limits": {
+    "maxDatagramBytes": 1500,
+    "maxPlaintextBytes": 1024,
+    "maxRequestIdChars": 64,
+    "maxArgsBytes": 512,
+    "handshakeBurstPerSource": 5,
+    "handshakesPerSecondPerSource": 1
+  },
+
+  "securityProperties": [
+    "mutual-authentication",
+    "forward-secrecy",
+    "replay-protection",
+    "silence-to-unauthenticated-traffic",
+    "per-peer-authority",
+    "immediate-revocation"
+  ],
+
+  "unauthenticatedBehaviour": {
+    "response": "none",
+    "dropped": [
+      "unknown or revoked key",
+      "source outside allowlist",
+      "malformed handshake",
+      "oversize datagram",
+      "rate-limited handshake",
+      "replayed or out-of-window counter"
+    ]
+  },
+
+  "application": {
+    "encoding": "application/json inside the encrypted channel",
+    "request": { "op": "string (granted operation)", "id": "string, 1-64 chars", "args": "object, optional" },
+    "success": { "ok": true, "id": "string", "result": "object" },
+    "failure": { "ok": false, "id": "string | null", "error": { "code": "string", "message": "string" } },
+    "errorCodes": ["too_large", "bad_json", "bad_shape", "bad_op", "bad_id", "bad_args", "args_too_large", "forbidden", "handler_error", "reply_too_large"]
+  },
+
+  "skills": [
+    {
+      "id": "ping",
+      "name": "Ping",
+      "description": "Liveness check over an authenticated channel.",
+      "tags": ["liveness"],
+      "requiresGrant": true
+    },
+    {
+      "id": "status",
+      "name": "Status",
+      "description": "Responder uptime, time and the caller's truncated key fingerprint.",
+      "tags": ["status"],
+      "requiresGrant": true
+    },
+    {
+      "id": "echo",
+      "name": "Echo",
+      "description": "Returns a supplied text string, bounded to 256 characters.",
+      "tags": ["diagnostic"],
+      "requiresGrant": true
+    }
+  ],
+
+  "limitations": [
+    {
+      "id": "stolen-key",
+      "statement": "A compromised enrolled device or stolen key crosses the authentication boundary like a legitimate peer. Protect keys at rest, revoke quickly and keep each peer's authority small."
+    },
+    {
+      "id": "availability",
+      "statement": "Encryption cannot stop a flood of the underlying link. That needs upstream protection and, where it matters, independent connectivity."
+    },
+    {
+      "id": "message-content",
+      "statement": "An authenticated message can still request something harmful. Postern decides who is speaking; whether to act is a separate authorisation decision above the channel."
+    }
+  ],
+
+  "posture": "A strong minimal design, not a proven most-resistant protocol. Resistance depends on how much code an attacker can reach, how keys are protected and what an authenticated peer is allowed to do.",
+
+  "site": {
+    "trackers": false,
+    "analytics": false,
+    "cookies": false
+  }
+}
