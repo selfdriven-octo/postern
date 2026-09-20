@@ -1,0 +1,12 @@
+# private keys — never commit these
+*.key.json
+!*.pub.json
+
+# local enrolment state
+peers.json
+roster.json
+
+node_modules/
+package-lock.json
+npm-debug.log*
+.DS_Store

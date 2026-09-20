@@ -1,0 +1,32 @@
+{
+  "name": "postern",
+  "version": "1.0.0",
+  "description": "Postern \u2014 a mutually authenticated, encrypted channel between explicitly enrolled devices. Client-server or peer-to-peer mesh.",
+  "license": "MIT",
+  "main": "src/node.js",
+  "scripts": {
+    "test": "node test.js",
+    "test:mesh": "node test-mesh.js",
+    "test:all": "node test.js && node test-mesh.js",
+    "peer": "node src/peer.js",
+    "server": "node src/server.js",
+    "roster": "node src/roster-cli.js",
+    "enroll": "node src/enroll.js"
+  },
+  "dependencies": {
+    "noise-handshake": "^4.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/selfdriven-octo/postern.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "MESH.md",
+    "SKILL.md"
+  ]
+}
