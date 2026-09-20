@@ -1,6 +1,6 @@
 ---
 name: postern
-description: Work on Postern — the mutually authenticated, encrypted Noise_IK-over-UDP channel between explicitly enrolled devices (github.com/selfdriven-octo/postern) and its site postern.network. Use when enrolling or revoking peers, running the responder, adding or granting operations, changing the wire protocol or limits, integrating an agent with Postern, or editing postern.network or its agent.json.
+description: Work on Postern — the mutually authenticated, encrypted Noise_IK-over-UDP channel between explicitly enrolled devices (github.com/selfdriven-octo/postern) and its site postern.network. Use when enrolling or revoking peers, running the responder, adding or granting operations, changing the wire protocol or limits, integrating an agent with Postern, or editing postern.network or its postern.json manifest.
 ---
 
 # Postern
@@ -155,7 +155,7 @@ The reference operations are `ping`, `status` and `echo`.
 
 **Structure.** The page runs in this order:
 
-- a full-viewport masonry doorway hero with a continuous wall and an open, lit arch
+- a full-viewport masonry doorway hero with a continuous wall and an open, lit, square-headed doorway under a lintel stone (the favicon uses the same square doorway)
 - a probe ticker
 - the live gate log with a "try the door" button that never gets a reply
 - the thesis statement
@@ -179,15 +179,13 @@ The reference operations are `ping`, `status` and `echo`.
 
 ---
 
-## agent.json
+## postern.json
 
-The manifest is served at `/.well-known/agent.json`. Update it whenever any of these change: protocol parameters, limits, operations, error codes, repository or site URLs, or the stated limitations.
+The machine-readable manifest is served at `/postern.json`. `index.html` links to it with `<link rel="alternate" type="application/json" href="/postern.json">`.
 
-Jekyll skips dot-directories, so `_config.yml` must contain:
+**Do not move it to `/.well-known/agent.json`, `/.well-known/agent-card.json` or `/.well-known/agents.json`.** Those paths belong to A2A Agent Cards and to Wildcard's agents.json. Postern exposes neither an A2A endpoint nor an HTTP API, so publishing there would announce an endpoint that does not exist, and A2A clients would fail to parse the file. If an A2A agent is ever run behind the door, give that agent its own conforming `agent-card.json`.
 
-```yaml
-include: [".well-known"]
-```
+Update `postern.json` whenever any of these change: protocol parameters, limits, operations, error codes, repository or site URLs, or the stated limitations.
 
 Leave `identity.responderStaticKey` as the placeholder `<responder-x25519-public-key>`. The responder key is distributed to enrolled peers out of band. Never publish a fabricated or test key there as if it were live.
 
@@ -200,5 +198,5 @@ Leave `identity.responderStaticKey` as the placeholder `<responder-x25519-public
 - [ ] Guard → rate limit → handshake → enrolment gate → AEAD → replay → re-check enrolment order intact.
 - [ ] New ops live in the fixed table, validate every argument, are granted per peer, and have tests.
 - [ ] `npm test` passes, including every negative case.
-- [ ] Changed bounds, protocol values or ops mirrored into `agent.json` and this skill.
+- [ ] Changed bounds, protocol values or ops mirrored into `postern.json` and this skill.
 - [ ] Site changes keep the single green hue, the font roles, and the iOS rendering rule.

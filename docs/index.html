@@ -8,7 +8,11 @@ permalink: "/"
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Postern — a small door in a thick wall</title>
-<link rel="alternate" type="application/json" href="/index.json" title="Postern manifest">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%23020a04%22/%3E%3Cpath d=%22M11 27V8h10v19z%22 fill=%22%2333ff33%22/%3E%3Crect x=%228%22 y=%2227%22 width=%2216%22 height=%222%22 fill=%22%231c4028%22/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABGElEQVR4nOyXvU4CQRSFz5nZIOIDmFBoY6GVsTEmxlZbXsDCxs738BGMrS+gnVpTEBqgp4EQAj1kKVguFzYkUPAXYCeQ+ZrdzExyvzmZ4t4A06TtM4mc/t2RzGKLiEhTPwURfKMXfU3WGRfGOY39JPiIBBDIvwyiV/RQGwvwOMjrze+RIJpEXsL+g9XYX4zhGxJGL3wmlnXLlHnX6C/gAiJNZmxLBU7hAH0LbZpMIHBIAMesJXDTvV7pXOmkglXZrwS8gBfwAl7AC3gBL3CQAmbUGMIR46ZUu+Jf7Yqf5h3K3m7WsTeLVSwQ+NME8AFHjGrHo9mSFHZSXORHwigXD6cpXNLask7ER0gALd4RRFcI0eDMjoPxfAgAAP//829T5gAAAAZJREFUAwD2w1LN696L1wAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAACE0lEQVR4nOzZq04EMQBA0WH2IfYTECgMBM3/azQBg0IQvoHdLGBIEFwxrkPO8ZM009s2abfzYTvBX5RBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkNYax+5qd/d8O63B483T8fU4rZCdgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgzRKHPN+2Ujmzeb0fp7W4Huo8/5z0Sfnj9M0gIv5MEQfl/fXEz/eHl6mAThWSOIgiYMkDpI4SOIgiYMkDpI4SOIgjXJ9vvRt5X8b5G1llCkZ5Hfwm/VKEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHKQvAAAA///aScMrAAAABklEQVQDAHfuGOjPPPzyAAAAAElFTkSuQmCC">
+<meta name="theme-color" content="#020a04">
+<link rel="alternate" type="application/json" href="/postern.json" title="Postern manifest">
 <meta name="description" content="Postern is a mutually authenticated, encrypted channel between explicitly enrolled devices. One UDP port. Enrolled keys only. Everyone else gets silence.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -330,9 +334,9 @@ permalink: "/"
         <ellipse cx="1000" cy="640" rx="150" ry="22" fill="url(#bloom)" opacity=".5"/>
       </g>
 
-      <!-- the open doorway: the light source itself -->
+      <!-- the open, square-headed doorway: the light source itself -->
       <g class="beam-flicker">
-        <path d="M958,640 L958,214 A42,42 0 0 1 1042,214 L1042,640 Z" fill="url(#aperture)"/>
+        <path d="M958,640 L958,172 L1042,172 L1042,640 Z" fill="url(#aperture)"/>
         <ellipse cx="1000" cy="646" rx="60" ry="80" fill="url(#bloom)" opacity=".5"/>
       </g>
 
@@ -340,9 +344,10 @@ permalink: "/"
       <rect x="-40" y="60" width="998" height="580" fill="var(--stone)"/>
       <!-- masonry: right mass -->
       <rect x="1042" y="60" width="598" height="580" fill="var(--stone)"/>
-      <!-- masonry over the arch: the block between the two masses, less the
-           arch opening, so the spandrels either side of the curve are stone -->
-      <path d="M958,60 H1042 V214 A42,42 0 0 0 958,214 Z" fill="var(--stone)"/>
+      <!-- masonry over the doorway, down to the square head of the opening -->
+      <rect x="958" y="60" width="84" height="112" fill="var(--stone)"/>
+      <!-- lintel stone spanning the head of the doorway -->
+      <rect x="944" y="156" width="112" height="16" fill="var(--stone-hi)"/>
       <!-- lintel -->
       <rect x="-40" y="-20" width="1680" height="86" fill="var(--stone-hi)"/>
       <!-- threshold -->
