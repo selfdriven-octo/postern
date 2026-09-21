@@ -250,6 +250,9 @@ permalink: "/"
   .mesh-fig{display:block; width:100%; max-width:420px; margin:0 auto; padding:clamp(10px,2vw,22px)}
   .mesh-fig .mesh-lbl text{font-family:"JetBrains Mono",monospace; font-size:13px; letter-spacing:.02em}
   .mesh-fig .mesh-void{font-family:"JetBrains Mono",monospace; font-size:11px; fill:var(--dim); letter-spacing:.14em}
+  .runbook-cta{margin-top:1.5rem}
+  .runbook-cta a{font-family:"JetBrains Mono",monospace; font-size:.86rem; letter-spacing:.02em; color:var(--brass); text-decoration:none; border:1px solid var(--line); padding:.45rem .8rem; display:inline-block; transition:border-color .25s, box-shadow .25s}
+  .runbook-cta a:hover{border-color:var(--brass); box-shadow:0 0 18px -6px var(--halo)}
   .fp{display:inline-flex; gap:.7rem; align-items:baseline; flex-wrap:wrap; margin:.2rem 0 .1rem; padding:.55rem .85rem; border:1px solid var(--brass); background:var(--brass-dim); font-family:"JetBrains Mono",monospace; font-size:.8rem; color:var(--muted)}
   .fp b{color:var(--brass); font-weight:700; font-size:1.02rem; letter-spacing:.08em; text-shadow:0 0 14px var(--halo)}
   .kel .ev{color:var(--brass)} .kel .sn{color:var(--ok)} .kel .dev{color:var(--ctr)} .kel .rv{color:var(--ink)}
@@ -303,6 +306,7 @@ permalink: "/"
   <div class="mark"><span class="tile"></span>POSTERN</div>
   <div class="bar-right">
     <span class="listening"><span class="pulse"></span>udp/51820 · listening · answering nobody</span>
+    <a class="gh" href="/mesh/">mesh runbook</a>
     <a class="gh" href="https://github.com/selfdriven-octo/postern" target="_blank" rel="noopener">github ↗</a>
   </div>
 </nav>
@@ -577,6 +581,7 @@ permalink: "/"
         <p class="fp">roster v3 <b>BP9B-M5T4-PDDG</b></p>
         <p>Keys, grants and revocations are in that number; addresses are not, so people can roam without re-verifying. If two peers dial each other at the same instant, both sides discard the same session without conferring — they keep the one started by the higher key.</p>
         <p>The cost of having no authority: a revocation takes effect on each node <b>when that node updates</b>. A colleague holding yesterday's roster still trusts yesterday's key. Postern makes that disagreement visible — peers can ask each other for their fingerprint — rather than pretending it away.</p>
+        <p class="runbook-cta"><a href="/mesh/">Stand one up for your team — the mesh runbook →</a></p>
       </div>
     </div>
   </section>

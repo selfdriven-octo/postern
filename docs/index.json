@@ -196,7 +196,8 @@ permalink: /postern.json
       "simultaneousOpen": "both sides keep the session whose initiator holds the higher static public key",
       "reHandshake": "a handshake later than the 1500ms race window replaces the existing session",
       "keepAliveSeconds": 25,
-      "rosterFingerprint": "covers keys, grants, revocation and version; not addresses"
+      "rosterFingerprint": "covers keys, grants, revocation and version; not addresses",
+      "runbook": "https://postern.network/mesh/"
     }
   }
 }
