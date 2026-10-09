@@ -1,0 +1,1 @@
+Hello from an offline audio modem! The receiving gateway can carry arbitrary signed transaction bytes; no blockchain submission in this demo.

@@ -1,0 +1,42 @@
+{
+  "format": "phone-fsk-field-v0.3",
+  "createdUtc": "2026-10-09T07:28:28.440Z",
+  "runId": "840086df",
+  "baud": 100,
+  "count": 6,
+  "gapMs": 1000,
+  "durationSeconds": 36.72,
+  "wavSha256": "f6fa7edd329ae48a2bc8f13345d4cde8de7e0103cf5a44678602509a9d8a4e1a",
+  "frames": [
+    {
+      "sequence": 0,
+      "payloadHex": "46535433840086df000000068e464981",
+      "expectedStartSeconds": 3
+    },
+    {
+      "sequence": 1,
+      "payloadHex": "46535433840086df00010006e8b53da0",
+      "expectedStartSeconds": 8.12
+    },
+    {
+      "sequence": 2,
+      "payloadHex": "46535433840086df0002000669c3d01c",
+      "expectedStartSeconds": 13.24
+    },
+    {
+      "sequence": 3,
+      "payloadHex": "46535433840086df00030006a2d1fd41",
+      "expectedStartSeconds": 18.36
+    },
+    {
+      "sequence": 4,
+      "payloadHex": "46535433840086df000400064ec1a4b5",
+      "expectedStartSeconds": 23.48
+    },
+    {
+      "sequence": 5,
+      "payloadHex": "46535433840086df000500066f75bd76",
+      "expectedStartSeconds": 28.6
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "format": "phone-fsk-field-report-v0.3",
+  "runId": "83b8373e",
+  "baud": 200,
+  "expectedFrames": 6,
+  "verifiedFrames": 6,
+  "missingFrames": [],
+  "frameDeliveryPercent": 100,
+  "recovered": [
+    {
+      "sequence": 0,
+      "atSeconds": 3.3
+    },
+    {
+      "sequence": 1,
+      "atSeconds": 6.66
+    },
+    {
+      "sequence": 2,
+      "atSeconds": 10.02
+    },
+    {
+      "sequence": 3,
+      "atSeconds": 13.38
+    },
+    {
+      "sequence": 4,
+      "atSeconds": 16.74
+    },
+    {
+      "sequence": 5,
+      "atSeconds": 20.1
+    }
+  ],
+  "unknownValidFrames": 0,
+  "signal": {
+    "durationSeconds": 26.16,
+    "rms": 0.3497,
+    "peak": 0.78,
+    "clippedSamples": 0,
+    "clippingPercent": 0
+  },
+  "caveat": "Frame-delivery rate is not bit-error rate. Missing frames may reflect clipping, sync loss, silence suppression, noise, or CRC rejection. No on-chain or cellular test is implied."
+}
